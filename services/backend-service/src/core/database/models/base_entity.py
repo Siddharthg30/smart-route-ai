@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 
-from core.database.base import Base
+from src.core.database.base import Base
 
 
 class BaseEntity(Base):
