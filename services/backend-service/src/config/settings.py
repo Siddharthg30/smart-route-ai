@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     app_name: str = "SmartRoute AI Backend"
     app_version: str = "0.1.0"
 
+    database_url: str
+
     host: str = "127.0.0.1"
     port: int = 8000
 
