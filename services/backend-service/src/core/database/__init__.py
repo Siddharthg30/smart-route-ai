@@ -1,5 +1,5 @@
 from .base import Base
-from .base_entity import BaseEntity
+from .models.base_entity import BaseEntity
 
 __all__ = [
     "Base",
