@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
-from src.api.router import router
+from api.router import api_router
+from api.router import router
 from config.settings import get_settings
 from core.logging.logger import setup_logging
 from core.middleware.request_logging import RequestLoggingMiddleware
@@ -29,5 +30,7 @@ def create_app() -> FastAPI:
     app.add_middleware(RequestLoggingMiddleware)
 
     app.include_router(router)
+
+    app.include_router(api_router)
 
     return app

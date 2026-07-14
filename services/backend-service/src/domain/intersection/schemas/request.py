@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from core.enums.intersection import (
     IntersectionStatus,
@@ -7,10 +7,25 @@ from core.enums.intersection import (
 
 
 class IntersectionCreate(BaseModel):
-    name: str
-    city: str
-    latitude: float
-    longitude: float
+    name: str = Field(
+        min_length=2,
+        max_length=100,
+    )
+
+    city: str = Field(
+        min_length=2,
+        max_length=100,
+    )
+
+    latitude: float = Field(
+        ge=-90,
+        le=90,
+    )
+
+    longitude: float = Field(
+        ge=-180,
+        le=180,
+    )
 
     status: IntersectionStatus = IntersectionStatus.ACTIVE
     operating_mode: OperatingMode = OperatingMode.EDGE_AI
@@ -21,10 +36,29 @@ class IntersectionCreate(BaseModel):
 
 
 class IntersectionUpdate(BaseModel):
-    name: str | None = None
-    city: str | None = None
-    latitude: float | None = None
-    longitude: float | None = None
+    name: str | None = Field(
+        default=None,
+        min_length=2,
+        max_length=100,
+    )
+
+    city: str | None = Field(
+        default=None,
+        min_length=2,
+        max_length=100,
+    )
+
+    latitude: float | None = Field(
+        default=None,
+        ge=-90,
+        le=90,
+    )
+
+    longitude: float | None = Field(
+        default=None,
+        ge=-180,
+        le=180,
+    )
 
     status: IntersectionStatus | None = None
     operating_mode: OperatingMode | None = None

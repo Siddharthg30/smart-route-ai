@@ -7,8 +7,11 @@ from domain.intersection.models import Intersection
 from domain.intersection.repositories import IntersectionRepository
 from domain.intersection.schemas import IntersectionCreate
 
+from sqlalchemy.exc import IntegrityError
+
 from core.exceptions.intersection import (
     IntersectionAlreadyExistsError,
+    IntersectionNotFoundError,
 )
 
 logger = AppLogger(__name__)
@@ -39,17 +42,31 @@ class IntersectionService:
         if existing:
             raise IntersectionAlreadyExistsError()
         
-        intersection = self.repository.create(data)
-        
-        logger.event(
-            EventType.INTERSECTION_CREATED,
-            message="Creating intersection",
-            intersection_id=str(intersection.id),
-            name=intersection.name,
-            city=intersection.city,
-        )
+        try:
+            intersection = self.repository.create(data)
 
-        return intersection
+            self.repository.db.commit()
+
+            self.repository.db.refresh(intersection)
+
+            logger.event(
+                EventType.INTERSECTION_CREATED,
+                message="Creating intersection",
+                intersection_id=str(intersection.id),
+                name=intersection.name,
+                city=intersection.city,
+            )
+
+            return intersection
+        
+        except IntegrityError:
+            self.repository.db.rollback()
+
+            raise IntersectionAlreadyExistsError()
+
+        except Exception:
+            self.repository.db.rollback()
+            raise
     
     def get_by_id(
         self,
@@ -64,7 +81,7 @@ class IntersectionService:
         )
 
         if not intersection:
-            raise IntersectionAlreadyExistsError()
+            raise IntersectionNotFoundError()
 
         return intersection
     

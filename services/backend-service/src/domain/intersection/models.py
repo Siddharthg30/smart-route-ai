@@ -1,8 +1,7 @@
-from sqlalchemy import Float, String
+from sqlalchemy import Float, String, Enum
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Enum
-from src.core.database.models.base_entity import BaseEntity
-from src.core.enums.intersection import (
+from core.database.models.base_entity import BaseEntity
+from core.enums.intersection import (
     IntersectionStatus,
     OperatingMode,
 )
@@ -19,11 +18,13 @@ class Intersection(BaseEntity):
         String(100),
         nullable=False,
         unique=True,
+        index=True,
     )
 
     city: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
+        index=True,
     )
 
     latitude: Mapped[float] = mapped_column(
@@ -40,6 +41,7 @@ class Intersection(BaseEntity):
         Enum(IntersectionStatus),
         default=IntersectionStatus.ACTIVE,
         nullable=False,
+        index=True,
     )
 
     operating_mode: Mapped[OperatingMode] = mapped_column(

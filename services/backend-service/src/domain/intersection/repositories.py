@@ -24,8 +24,6 @@ class IntersectionRepository:
         )
 
         self.db.add(intersection)
-        self.db.commit()
-        self.db.refresh(intersection)
 
         return intersection
     
