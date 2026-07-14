@@ -18,6 +18,7 @@ class Intersection(BaseEntity):
     name: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
+        unique=True,
     )
 
     city: Mapped[str] = mapped_column(

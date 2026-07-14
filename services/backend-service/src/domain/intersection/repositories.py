@@ -48,3 +48,19 @@ class IntersectionRepository:
             self.db.query(Intersection)
             .all()
         )
+    
+    def get_by_name(
+        self,
+        name: str,
+    ) -> Intersection | None:
+        """
+        Retrieve an intersection by its name.
+        """
+
+        return (
+            self.db.query(Intersection)
+            .filter(
+                Intersection.name == name
+            )
+            .first()
+        )
