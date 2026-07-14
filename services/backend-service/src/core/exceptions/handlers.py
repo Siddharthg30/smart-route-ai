@@ -2,6 +2,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from core.exceptions.base import AppException
+from core.logging.app_logger import AppLogger
+from core.logging.events import EventType
+
+logger = AppLogger(__name__)
 
 
 def register_exception_handlers(app: FastAPI) -> None:
@@ -14,6 +18,16 @@ def register_exception_handlers(app: FastAPI) -> None:
         request: Request,
         exc: AppException,
     ):
+        
+        logger.event(
+            EventType.APPLICATION_ERROR,
+            message=exc.message,
+            error_code=exc.error_code,
+            status_code=exc.status_code,
+            method=request.method,
+            path=request.url.path,
+        )
+
         return JSONResponse(
             status_code=exc.status_code,
             content={
